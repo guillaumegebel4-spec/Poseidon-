@@ -42,7 +42,6 @@
       touch-action: none;
     }
 
-    /* Loading screen */
     #loading-screen {
       position: fixed;
       inset: 0;
@@ -104,8 +103,23 @@
       text-transform: uppercase;
     }
   </style>
-  <link rel="modulepreload" crossorigin href="./assets/phaser-0RJB29YE-BBKjSThS.js">
-  <script type="module" crossorigin src="./assets/index-CulgOFuP.js"></script>
+
+  <!-- Inline fallback (plain script, not module): hides loading screen even if the game bundle errors -->
+  <script>
+    (function() {
+      function hideLoader() {
+        var s = document.getElementById('loading-screen');
+        if (s) {
+          s.style.transition = 'opacity 0.8s ease';
+          s.style.opacity = '0';
+          s.style.pointerEvents = 'none';
+          setTimeout(function() { if (s && s.parentNode) s.parentNode.removeChild(s); }, 900);
+        }
+      }
+      window._hideLoader = hideLoader;
+      setTimeout(hideLoader, 12000);
+    })();
+  </script>
 </head>
 <body>
   <div id="loading-screen">
@@ -119,5 +133,6 @@
 
   <div id="game-container"></div>
 
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
