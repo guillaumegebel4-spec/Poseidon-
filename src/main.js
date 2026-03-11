@@ -15,13 +15,7 @@ export function getAudioContext() {
   return audioCtx;
 }
 
-// Start the game
-const game = new Phaser.Game(GameConfig);
-
-// Expose for debugging
-window.PoseidonGame = game;
-
-// Remove loading screen once Phaser boots
+// Remove loading screen
 const hideLoadingScreen = () => {
   const screen = document.getElementById('loading-screen');
   if (screen) {
@@ -30,12 +24,19 @@ const hideLoadingScreen = () => {
   }
 };
 
-game.events.once('ready', () => {
-  setTimeout(hideLoadingScreen, 500);
-});
+// Fallback: force hide after 4s regardless of game state
+setTimeout(hideLoadingScreen, 4000);
 
-// Fallback: force hide after 5s regardless
-setTimeout(hideLoadingScreen, 5000);
+// Start the game
+let game;
+try {
+  game = new Phaser.Game(GameConfig);
+  window.PoseidonGame = game;
+  game.events.once('ready', () => setTimeout(hideLoadingScreen, 300));
+} catch (err) {
+  console.error('Phaser init error:', err);
+  hideLoadingScreen();
+}
 
 // Loading bar simulation
 const bar = document.getElementById('loading-bar');
@@ -60,4 +61,4 @@ const loadInterval = setInterval(() => {
   if (loadProgress >= 95) clearInterval(loadInterval);
 }, 200);
 
-export { game };
+export { game as default };

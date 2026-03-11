@@ -23,7 +23,7 @@ export const ARENA_COLS = 9;
 export const ARENA_ROWS = 9;
 
 export const GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.CANVAS,   // Force Canvas — avoids WebGL init failures on mobile Safari
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
   parent: 'game-container',
@@ -31,20 +31,12 @@ export const GameConfig = {
   pixelArt: false,
   antialias: true,
   roundPixels: false,
-  resolution: Math.min(window.devicePixelRatio || 1, 2),
 
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: GAME_WIDTH,
     height: GAME_HEIGHT,
-  },
-
-  render: {
-    powerPreference: 'high-performance',
-    batchSize: 4096,
-    maxTextures: 16,
-    mipmapFilter: 'LINEAR_MIPMAP_LINEAR',
   },
 
   physics: {
