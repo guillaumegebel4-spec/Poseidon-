@@ -1,0 +1,17 @@
+{
+  "name": "poseidon-rpg",
+  "version": "1.0.0",
+  "description": "Poseidon - Isometric Action RPG inspired by Hades & Dofus, Steelpine art direction",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "phaser": "^3.70.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
