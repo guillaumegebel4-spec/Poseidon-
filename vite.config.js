@@ -5,10 +5,11 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    // Let Vite/Rollup handle chunking automatically
     rollupOptions: {
       output: {
-        manualChunks: {
-          phaser: ['phaser']
+        manualChunks(id) {
+          if (id.includes('node_modules/phaser')) return 'phaser';
         }
       }
     }
