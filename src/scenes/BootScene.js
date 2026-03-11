@@ -227,7 +227,8 @@ export class BootScene extends Phaser.Scene {
       // Run the actual heavy work on step 1 (texture generation)
       if (step === 1) {
         try {
-          TextureFactory.generate(this);
+          const tf = new TextureFactory(this);
+          tf.generateAll();
         } catch (e) {
           console.warn('[BootScene] TextureFactory error:', e);
         }

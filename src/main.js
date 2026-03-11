@@ -22,15 +22,20 @@ const game = new Phaser.Game(GameConfig);
 window.PoseidonGame = game;
 
 // Remove loading screen once Phaser boots
+const hideLoadingScreen = () => {
+  const screen = document.getElementById('loading-screen');
+  if (screen) {
+    screen.classList.add('hidden');
+    setTimeout(() => screen.remove(), 1000);
+  }
+};
+
 game.events.once('ready', () => {
-  setTimeout(() => {
-    const screen = document.getElementById('loading-screen');
-    if (screen) {
-      screen.classList.add('hidden');
-      setTimeout(() => screen.remove(), 1000);
-    }
-  }, 500);
+  setTimeout(hideLoadingScreen, 500);
 });
+
+// Fallback: force hide after 5s regardless
+setTimeout(hideLoadingScreen, 5000);
 
 // Loading bar simulation
 const bar = document.getElementById('loading-bar');

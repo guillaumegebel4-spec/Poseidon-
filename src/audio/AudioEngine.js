@@ -4,7 +4,18 @@
 // No audio file assets required — everything is synthesized.
 // ============================================================
 
-import { getAudioContext } from '../main.js';
+// AudioContext managed internally — no import from main.js to avoid circular deps
+function getAudioContext() {
+  if (!window._poseidonAudioCtx) {
+    try {
+      window._poseidonAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      console.warn('AudioEngine: could not create AudioContext', e);
+      return null;
+    }
+  }
+  return window._poseidonAudioCtx;
+}
 
 // ─── HELPERS ─────────────────────────────────────────────────────
 
