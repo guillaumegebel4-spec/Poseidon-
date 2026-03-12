@@ -29,8 +29,9 @@ const PHASES = {
 const ARENA_TILE_W = 44;
 const ARENA_TILE_H = 22;
 const ARENA_DEPTH  = 14;
-const ARENA_ORIGIN_X = GAME_WIDTH / 2;
-const ARENA_ORIGIN_Y = GAME_HEIGHT * 0.42;
+// Hardcoded to avoid circular-import TDZ (GameConfig imports CombatScene which imports GameConfig)
+const ARENA_ORIGIN_X = 195;   // = GAME_WIDTH / 2   (390 / 2)
+const ARENA_ORIGIN_Y = 354;   // = GAME_HEIGHT * 0.42  (844 * 0.42)
 
 // ─────────────────────────────────────────────────────────────────
 export class CombatScene extends Phaser.Scene {
