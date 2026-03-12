@@ -44,8 +44,8 @@ export class MainMenuScene extends Phaser.Scene {
       }
     } catch (_) {}
 
-    // Fade in from black
-    this.cameras.main.fadeIn(300, 0, 0, 0);
+    // Explicit camera background (no fade — camera effects can block rendering on iOS Safari)
+    this.cameras.main.setBackgroundColor('#0D0A08');
   }
 
   update(time, delta) {
