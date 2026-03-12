@@ -286,10 +286,16 @@ export class BootScene extends Phaser.Scene {
     this._setupAudioUnlock();
 
     // ── Transition to MainMenu ────────────────────────────────
-    this.cameras.main.fadeOut(400, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => {
+    // Timer fallback in case camerafadeoutcomplete doesn't fire on iOS Safari
+    let _didTransition = false;
+    const _goToMenu = () => {
+      if (_didTransition) return;
+      _didTransition = true;
       this.scene.start('MainMenuScene');
-    });
+    };
+    this.cameras.main.fadeOut(400, 0, 0, 0);
+    this.cameras.main.once('camerafadeoutcomplete', _goToMenu);
+    this.time.delayedCall(500, _goToMenu);
   }
 
   // ─────────────────────────────────────────────────────────────

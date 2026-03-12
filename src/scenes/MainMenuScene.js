@@ -28,12 +28,12 @@ export class MainMenuScene extends Phaser.Scene {
     try { audioEngine.init(); } catch (_) {}
     try { audioEngine.playMusic('menu'); } catch (_) {}
 
-    this._buildBackground();
-    this._buildTitle();
-    this._buildCharacterSelect();
-    this._buildStartButton();
-    this._buildParticles();
-    this._buildVersionTag();
+    try { this._buildBackground(); }     catch (e) { console.warn('[Menu] bg error', e); }
+    try { this._buildTitle(); }          catch (e) { console.warn('[Menu] title error', e); }
+    try { this._buildCharacterSelect(); } catch (e) { console.warn('[Menu] chars error', e); }
+    try { this._buildStartButton(); }    catch (e) { console.warn('[Menu] btn error', e); }
+    try { this._buildParticles(); }      catch (e) { console.warn('[Menu] particles error', e); }
+    try { this._buildVersionTag(); }     catch (e) { console.warn('[Menu] version error', e); }
 
     // Keyboard input (desktop — gracefully absent on mobile)
     try {
@@ -44,11 +44,8 @@ export class MainMenuScene extends Phaser.Scene {
       }
     } catch (_) {}
 
-    // Mobile: tap card or "BEGIN JOURNEY" button to start
-    // (handled via container.on('pointerdown') on each card and the hitZone)
-
     // Fade in from black
-    this.cameras.main.fadeIn(500, 0, 0, 0);
+    this.cameras.main.fadeIn(300, 0, 0, 0);
   }
 
   update(time, delta) {
@@ -84,16 +81,20 @@ export class MainMenuScene extends Phaser.Scene {
     // Steelpine forest silhouette
     this._drawForestSilhouette();
 
-    // Stars
-    for (let i = 0; i < 60; i++) {
-      const star = this.add.graphics();
-      const x = Math.random() * GAME_WIDTH;
-      const y = Math.random() * GAME_HEIGHT * 0.5;
-      const r = Math.random() * 1.5 + 0.5;
-      star.fillStyle(0xEDE4D3, 0.3 + Math.random() * 0.4);
-      star.fillCircle(x, y, r);
-      this._particles.push({ obj: star, type: 'star', baseAlpha: 0.3 + Math.random() * 0.4, phase: Math.random() * Math.PI * 2 });
+    // Stars — single Graphics object for all (much better performance)
+    const starG = this.add.graphics();
+    this._starGraphics = starG;
+    this._starData = [];
+    for (let i = 0; i < 50; i++) {
+      this._starData.push({
+        x: Math.random() * GAME_WIDTH,
+        y: Math.random() * GAME_HEIGHT * 0.5,
+        r: Math.random() * 1.5 + 0.5,
+        baseAlpha: 0.3 + Math.random() * 0.4,
+        phase: Math.random() * Math.PI * 2,
+      });
     }
+    this._drawStars(0);
 
     // Moon
     const moon = this.add.graphics();
@@ -104,19 +105,30 @@ export class MainMenuScene extends Phaser.Scene {
   _drawForestSilhouette() {
     const g = this.add.graphics();
 
-    // Back layer
+    // Back layer — use beginPath/lineTo instead of fillPoints (Canvas mode compatible)
     g.fillStyle(0x1A2A0A, 1);
-    const points1 = this._generateTreeline(GAME_HEIGHT * 0.55, 0.18, 12);
-    g.fillPoints(this._trelineToPolygon(points1), true, true);
+    this._fillPolygon(g, this._generateTreeline(GAME_HEIGHT * 0.55, 0.18, 12));
 
     // Mid layer
     g.fillStyle(0x0D1A08, 1);
-    const points2 = this._generateTreeline(GAME_HEIGHT * 0.68, 0.12, 8);
-    g.fillPoints(this._trelineToPolygon(points2), true, true);
+    this._fillPolygon(g, this._generateTreeline(GAME_HEIGHT * 0.68, 0.12, 8));
 
     // Ground
     g.fillStyle(0x0A0F06, 1);
     g.fillRect(0, GAME_HEIGHT * 0.75, GAME_WIDTH, GAME_HEIGHT * 0.25);
+  }
+
+  // Canvas-safe polygon fill (works in both WebGL and Canvas mode on iOS Safari)
+  _fillPolygon(g, ys) {
+    const poly = this._trelineToPolygon(ys);
+    if (poly.length < 3) return;
+    g.beginPath();
+    g.moveTo(poly[0].x, poly[0].y);
+    for (let i = 1; i < poly.length; i++) {
+      g.lineTo(poly[i].x, poly[i].y);
+    }
+    g.closePath();
+    g.fillPath();
   }
 
   _generateTreeline(baseY, variance, segments) {
@@ -382,13 +394,31 @@ export class MainMenuScene extends Phaser.Scene {
     }
   }
 
+  _drawStars(time) {
+    if (!this._starGraphics || !this._starData) return;
+    const g = this._starGraphics;
+    g.clear();
+    this._starData.forEach(s => {
+      const alpha = s.baseAlpha * (0.7 + 0.3 * Math.sin(s.phase));
+      g.fillStyle(0xEDE4D3, alpha);
+      g.fillCircle(s.x, s.y, s.r);
+    });
+  }
+
   _animateParticles(delta) {
     const dt = delta / 1000;
+
+    // Animate stars via their phase
+    let starsChanged = false;
+    if (this._starData) {
+      this._starData.forEach(s => { s.phase += dt * 0.8; });
+      starsChanged = true;
+    }
+    if (starsChanged) this._drawStars();
+
+    // Animate embers
     this._particles.forEach(p => {
-      if (p.type === 'star') {
-        p.phase += dt * 0.8;
-        p.obj.setAlpha(p.baseAlpha * (0.7 + 0.3 * Math.sin(p.phase)));
-      } else if (p.type === 'ember') {
+      if (p.type === 'ember') {
         p.obj.x += p.vx;
         p.obj.y += p.vy;
         p.phase += dt * 2;
