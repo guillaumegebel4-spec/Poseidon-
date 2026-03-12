@@ -14,7 +14,7 @@ import {
   GAME_WIDTH, GAME_HEIGHT,
   TILE_W, TILE_H, TILE_DEPTH,
   ARENA_COLS, ARENA_ROWS,
-} from '../GameConfig.js';
+} from '../data/Constants.js';
 
 // ─── CONSTANTS ───────────────────────────────────────────────────
 const PHASES = {

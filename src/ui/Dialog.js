@@ -5,7 +5,7 @@
 
 import Phaser from 'phaser';
 import { INT, PALETTE } from '../data/Palette.js';
-import { GAME_WIDTH, GAME_HEIGHT } from '../GameConfig.js';
+import { GAME_WIDTH, GAME_HEIGHT } from '../data/Constants.js';
 import { audioEngine } from '../audio/AudioEngine.js';
 
 // ─────────────────────────────────────────────────────────────────

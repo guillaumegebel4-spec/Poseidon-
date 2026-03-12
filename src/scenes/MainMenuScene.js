@@ -7,7 +7,7 @@ import Phaser from 'phaser';
 import { audioEngine }     from '../audio/AudioEngine.js';
 import { INT, PALETTE }    from '../data/Palette.js';
 import { CHARACTERS }      from '../data/GameData.js';
-import { GAME_WIDTH, GAME_HEIGHT } from '../GameConfig.js';
+import { GAME_WIDTH, GAME_HEIGHT } from '../data/Constants.js';
 
 const CHAR_IDS = ['vormund', 'watcher', 'bolt', 'pointe'];
 

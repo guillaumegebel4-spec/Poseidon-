@@ -6,7 +6,7 @@
 
 import Phaser from 'phaser';
 import { INT, PALETTE, BIOME_PALETTES } from '../data/Palette.js';
-import { TILE_W, TILE_H, TILE_DEPTH } from '../GameConfig.js';
+import { TILE_W, TILE_H, TILE_DEPTH } from '../data/Constants.js';
 
 // ─── HELPERS ─────────────────────────────────────────────────────
 

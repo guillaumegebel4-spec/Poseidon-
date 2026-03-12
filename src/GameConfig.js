@@ -8,19 +8,14 @@ import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { WorldScene } from './scenes/WorldScene.js';
 import { CombatScene } from './scenes/CombatScene.js';
 import { UIScene } from './scenes/UIScene.js';
+import {
+  GAME_WIDTH, GAME_HEIGHT,
+  TILE_W, TILE_H, TILE_DEPTH,
+  ARENA_COLS, ARENA_ROWS,
+} from './data/Constants.js';
 
-// Base game dimensions (portrait mobile)
-export const GAME_WIDTH = 390;
-export const GAME_HEIGHT = 844;
-
-// Isometric tile dimensions
-export const TILE_W = 64;
-export const TILE_H = 32;
-export const TILE_DEPTH = 24;
-
-// Combat arena
-export const ARENA_COLS = 9;
-export const ARENA_ROWS = 9;
+// Re-export constants for backward compatibility
+export { GAME_WIDTH, GAME_HEIGHT, TILE_W, TILE_H, TILE_DEPTH, ARENA_COLS, ARENA_ROWS };
 
 export const GameConfig = {
   type: Phaser.CANVAS,   // Force Canvas — avoids WebGL init failures on mobile Safari

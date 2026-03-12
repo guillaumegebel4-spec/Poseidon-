@@ -10,7 +10,7 @@ import { WorldMap }        from '../world/WorldMap.js';
 import {
   TILE_W, TILE_H, TILE_DEPTH,
   GAME_WIDTH, GAME_HEIGHT,
-} from '../GameConfig.js';
+} from '../data/Constants.js';
 import { BIOMES } from '../data/GameData.js';
 
 // ─── CONSTANTS ───────────────────────────────────────────────────

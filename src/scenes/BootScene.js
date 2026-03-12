@@ -4,7 +4,7 @@
 // Initializes textures, state, audio, then launches MainMenu
 // ============================================================
 import Phaser from 'phaser';
-import { GAME_WIDTH, GAME_HEIGHT } from '../GameConfig.js';
+import { GAME_WIDTH, GAME_HEIGHT } from '../data/Constants.js';
 import { PALETTE, INT } from '../data/Palette.js';
 import { TextureFactory } from '../graphics/TextureFactory.js';
 
