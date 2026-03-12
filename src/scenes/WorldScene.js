@@ -789,17 +789,14 @@ export class WorldScene extends Phaser.Scene {
     if (this.isTransitioning) return;
     this.isTransitioning = true;
 
-    this.cameras.main.fade(400, 0, 0, 0, false, (_cam, progress) => {
-      if (progress >= 1) {
-        this.scene.launch('CombatScene', {
-          enemyId:     enemyData.enemyId,
-          biomeId:     this.biomeId,
-          characterId: this.characterId,
-        });
-        this.scene.pause();
-        this.isTransitioning = false;
-      }
+    // Pause immediately then launch CombatScene (camera.fade unreliable on iOS Safari)
+    this.scene.pause();
+    this.scene.launch('CombatScene', {
+      enemyId:     enemyData.enemyId,
+      biomeId:     this.biomeId,
+      characterId: this.characterId,
     });
+    this.isTransitioning = false;
   }
 
   // ─── PLAYER DEATH ────────────────────────────────────────────────
@@ -807,16 +804,9 @@ export class WorldScene extends Phaser.Scene {
   /** Called when the player's HP reaches 0. */
   onPlayerDeath() {
     this.isTransitioning = true;
-
-    // Flash red, then return to main menu
-    this.cameras.main.flash(300, 200, 0, 0);
     this.time.delayedCall(800, () => {
-      this.cameras.main.fade(500, 0, 0, 0, false, (_cam, progress) => {
-        if (progress >= 1) {
-          this.sound.stopAll();
-          this.scene.start('MainMenuScene');
-        }
-      });
+      this.sound.stopAll();
+      this.scene.start('MainMenuScene');
     });
   }
 

@@ -27,9 +27,10 @@ function darken(hex, factor) {
 function lighten(hex, factor) {
   const { r, g, b } = hexRGB(hex);
   const f = factor;
-  return (Math.clamp(Math.round(r + (255 - r) * f), 0, 255) << 16) |
-         (Math.clamp(Math.round(g + (255 - g) * f), 0, 255) << 8) |
-          Math.clamp(Math.round(b + (255 - b) * f), 0, 255);
+  const clamp = (v) => Math.min(Math.max(v, 0), 255);
+  return (clamp(Math.round(r + (255 - r) * f)) << 16) |
+         (clamp(Math.round(g + (255 - g) * f)) << 8) |
+          clamp(Math.round(b + (255 - b) * f));
 }
 
 /** Blend two hex colours (t = 0→a, 1→b) */

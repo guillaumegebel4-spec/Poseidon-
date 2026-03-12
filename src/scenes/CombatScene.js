@@ -91,9 +91,10 @@ export class CombatScene extends Phaser.Scene {
   _buildArenaBackground() {
     const pal = BIOME_PALETTES[this.biomeId] || BIOME_PALETTES.forest;
 
-    // Dark bg gradient
+    // Solid dark background (fillGradientStyle unreliable in Canvas mode on iOS)
+    this.cameras.main.setBackgroundColor('#0D0A08');
     const bg = this.add.graphics();
-    bg.fillGradientStyle(0x0D0A08, 0x0D0A08, 0x1A1008, 0x1A1008, 1);
+    bg.fillStyle(0x0D0A08, 1);
     bg.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
     // Atmospheric fog
@@ -779,19 +780,13 @@ export class CombatScene extends Phaser.Scene {
 
   _exitCombat(victory) {
     audioEngine.stopMusic(1);
-
-    this.tweens.add({
-      targets: this.cameras.main,
-      alpha: 0,
-      duration: 400,
-      onComplete: () => {
-        this.scene.stop();
-        const worldScene = this.scene.get(this.returnScene);
-        if (worldScene) {
-          worldScene.scene.resume();
-          worldScene.events.emit('combatEnd', { victory, playerData: this.playerData });
-        }
-      },
+    this.time.delayedCall(300, () => {
+      this.scene.stop();
+      const worldScene = this.scene.get(this.returnScene);
+      if (worldScene) {
+        worldScene.scene.resume();
+        worldScene.events.emit('combatEnd', { victory, playerData: this.playerData });
+      }
     });
   }
 

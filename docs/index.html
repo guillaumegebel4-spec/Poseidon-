@@ -30,17 +30,16 @@
       window._hideLoader=hideLoader;
       setTimeout(hideLoader,12000);
 
-      // Debug overlay — shows JS errors and scene transitions on screen
-      window._dbg = function(msg) {
-        var d = document.getElementById('_dbg');
-        if (d) { d.style.display='block'; d.textContent = msg; }
-      };
+      // Debug overlay — errors only
+      window._dbg = function() {}; // no-op for info messages
       window.onerror = function(msg, src, line) {
-        window._dbg('ERR: ' + msg + ' [L' + line + ']');
+        var d = document.getElementById('_dbg');
+        if (d) { d.style.display='block'; d.textContent = 'ERR: ' + msg + ' [L' + line + ']'; }
         return false;
       };
       window.addEventListener('unhandledrejection', function(e) {
-        window._dbg('ASYNC ERR: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+        var d = document.getElementById('_dbg');
+        if (d) { d.style.display='block'; d.textContent = 'ASYNC ERR: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)); }
       });
 
       // PWA service worker
@@ -51,7 +50,7 @@
       }
     })();
   </script>
-  <script type="module" crossorigin src="./assets/index-DVVt55NH.js"></script>
+  <script type="module" crossorigin src="./assets/index-CjJUeSHz.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/phaser-0RJB29YE.js">
 </head>
 <body>
