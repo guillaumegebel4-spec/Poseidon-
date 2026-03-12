@@ -286,8 +286,9 @@ export class BootScene extends Phaser.Scene {
     this._setupAudioUnlock();
 
     // ── Transition to MainMenu ────────────────────────────────
-    // Simple timer — no camera fade (fade events unreliable on iOS Safari)
+    if (window._dbg) window._dbg('BOOT OK → launching MainMenu...');
     this.time.delayedCall(300, () => {
+      if (window._dbg) window._dbg('Starting MainMenuScene...');
       this.scene.start('MainMenuScene');
     });
   }

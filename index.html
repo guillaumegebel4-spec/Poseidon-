@@ -6,6 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#C4614A">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <title>POSEIDON — Rise of the Steel Tribes</title>
   <style>
     * { margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none; }
@@ -22,9 +25,30 @@
   </style>
   <script>
     (function(){
+      // Loading screen
       function hideLoader(){var s=document.getElementById('loading-screen');if(s){s.style.transition='opacity 0.8s ease';s.style.opacity='0';s.style.pointerEvents='none';setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},900);}}
       window._hideLoader=hideLoader;
       setTimeout(hideLoader,12000);
+
+      // Debug overlay — shows JS errors and scene transitions on screen
+      window._dbg = function(msg) {
+        var d = document.getElementById('_dbg');
+        if (d) { d.style.display='block'; d.textContent = msg; }
+      };
+      window.onerror = function(msg, src, line) {
+        window._dbg('ERR: ' + msg + ' [L' + line + ']');
+        return false;
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        window._dbg('ASYNC ERR: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+      });
+
+      // PWA service worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('./sw.js').catch(function(){});
+        });
+      }
     })();
   </script>
   <link rel="modulepreload" crossorigin href="./assets/phaser-0RJB29YE-BBKjSThS-BBKjSThS.js">
@@ -38,5 +62,6 @@
     <div class="loading-text" id="loading-text">Forging the world...</div>
   </div>
   <div id="game-container"></div>
+  <div id="_dbg" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#C4614A;color:#fff;padding:8px 12px;font-family:monospace;font-size:12px;z-index:99999;word-break:break-all;min-height:32px;"></div>
 </body>
 </html>
